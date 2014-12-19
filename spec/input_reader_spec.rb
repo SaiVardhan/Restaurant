@@ -8,20 +8,35 @@ describe "InputReader" do
 		@ir = InputReader.new(@file)
 	end
 	
-	   describe "#file_exist" do
+	   describe "#file_exist?" do
 		   it "returns true when file exits" do
 			 expect(@ir.file_exist?).to be(true)
 		   end
-#			it "returns false when file doesnot exist" do
-#			 #@file = ''
-#			 expect(@ir.file_exist?).to_not be(false)
-#			end	  				
+  				
 	   end
 	   
-	   describe "#file_extension" do
+	   describe "#is_csv?" do
 	    	it "checks the CSV extension" do
-	    		expect(@ir.file_extn?).to be(true)
+	    		expect(@ir.is_csv?).to be(true)
 	    	end
-	   end
+		end
+
+		context "if the file is csv and has data then parse it" do
+		    before(:each) do
+		    	@res_data = @ir.parse_csv_data(@file)
+		    end
+			describe "#prase_csv_data(file)" do
+			 it "returns array with csv data" do
+			 	expect(@res_data).to be_an_instance_of(Array)
+			 end
+			 it "#change_res_arr_to_hash(arr)" do
+			 	expect(@ir.change_res_arr_to_hash(@res_data)).to be_an_instance_of(Hash)
+			 end
+			 
+				
+			end	
+    	end
+    	
+    	
 
 end

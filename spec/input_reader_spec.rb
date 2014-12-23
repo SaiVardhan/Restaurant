@@ -25,15 +25,10 @@ describe "InputReader" do
 		    before(:each) do
 		    	@res_data = @ir.parse_csv_data(@file)
 		    end
-			describe "#prase_csv_data(file)" do
-			 it "returns array with csv data" do
-			 	expect(@res_data).to be_an_instance_of(Array)
-			 end
-			 it "#change_res_arr_to_hash(arr)" do
-			 	expect(@ir.change_res_arr_to_hash(@res_data)).to be_an_instance_of(Hash)
-			 end
-			 
-				
+			describe "#prase_csv_data(file)" do 
+				 it "returns hash with when the file is supplied" do
+				 	expect(@res_data).to be_an_instance_of(Hash)
+				 end			
 			end	
     	end
     	

@@ -1,20 +1,17 @@
 require 'csv'
 
-require_relative 'restaurant'
+require_relative 'item'
 
 class InputReader
 
-attr_accessor :file
+attr_accessor :file,:ordered_items
 
-	def initialize(csv_file)
+	def initialize(csv_file,ordered_items)
 		@file = csv_file
 		restaurant_data = parse_csv_data(@file)
-#		temp _arr = []
-#		restaurant_data.each do |a|
-#		 
-#		temp_arr <<	Restaurant.new(a[1])	
-#		end
-		#schange_res_arr_to_hash(restaurant_data)
+		@ordered_items = ordered_items
+		#change_res_arr_to_hash(restaurant_data)
+		find_match_data(restaurant_data,@ordered_items)  
 	end
 	
 	def file_exist?
@@ -26,18 +23,23 @@ attr_accessor :file
 	def parse_csv_data(file)
 		if file_exist? && is_csv?
 			csv_file = File.read(file)
-			csv =  csv = CSV.parse(csv_file)
-			csv_data = []
+			csv = CSV.parse(csv_file)
+			csv_data = {}
 			csv.each do |row|
 			   arr = []
-			   arr << row [0]
-			   arr << Restaurant.new(row[1..-1])
-			   csv_data << arr
+			   res_item_hash = {"price" => row[1].to_f,"label" =>  row[-1].to_s }
+			   arr << res_item_hash
+			   if csv_data[row[0]] 
+			       
+			   		csv_data[row[0]] << arr
+			   else
+			   		csv_data[row[0]] = arr
+			   end
+			    csv_data[row[0]].flatten!
+			   #csv_data << arr
 			end
-			 puts csv_data.inspect
-			#puts csv_data.group_by(&:first).map { |k, vs| [ k, *vs.map(&:last) ] }.inspect
-			#csv_data.group_by(&:first).map { |k, vs| [ k, *vs.map(&:last) ] }
-			
+			 puts "CSV DATA IS",csv_data.inspect
+			csv_data
 		else
 		 	puts "File is not specified correctly"
 		 	return "File is not specified correctly"
@@ -45,16 +47,19 @@ attr_accessor :file
 	
 	end
 	
-	def change_res_arr_to_hash(arr)
-	    
-		#puts Hash[arr.map {|key, value=[]| [key, value]}].inspect	
-		Hash[arr.map {|key, value=[]| [key, value]}]
+	def find_match_data(restaurant_data,ordered_items)
+		res = []
+		restaurant_data.each{|k, v|
+			res << k if  v.detect{|hash| ordered_items.include?(hash["label"])}
+		}
+		puts res.inspect
+		res
 	end
 	
+
 	
 end
 
 file1 = File.dirname(__dir__) + '/pepsi_burger.csv'
-#puts file1
-ir = InputReader.new(file1)
-#ir.parse_csv_data(file)
+ir = InputReader.new(file1,["Pepsi","Burger"])
+

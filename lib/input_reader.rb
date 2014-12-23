@@ -9,7 +9,7 @@ attr_accessor :file,:ordered_items
 	def initialize(csv_file,ordered_items)
 		@file = csv_file
 		restaurant_data = parse_csv_data(@file)
-		@ordered_items = ordered_items
+		@ordered_items = ordered_items.map(&:capitalize)
 		#change_res_arr_to_hash(restaurant_data)
 		find_match_data(restaurant_data,@ordered_items)  
 	end
@@ -27,7 +27,7 @@ attr_accessor :file,:ordered_items
 			csv_data = {}
 			csv.each do |row|
 			   arr = []
-			   res_item_hash = {"price" => row[1].to_f,"label" =>  row[-1].to_s }
+			   res_item_hash = {"price" => row[1].to_f,"label" =>  row[-1].to_s.capitalize }
 			   arr << res_item_hash
 			   if csv_data[row[0]] 
 			       
@@ -48,12 +48,18 @@ attr_accessor :file,:ordered_items
 	end
 	
 	def find_match_data(restaurant_data,ordered_items)
-		res = []
+		res_ids= []
 		restaurant_data.each{|k, v|
-			res << k if  v.detect{|hash| ordered_items.include?(hash["label"])}
+			res_ids << k if  v.detect{|hash| ordered_items.include?(hash["label"])}
 		}
-		puts res.inspect
-		res
+		puts res_ids.inspect
+		res_ids
+	end
+	
+	def find_best_restaurant_with_price(res_ids,res_data)
+		
+	 
+		
 	end
 	
 
@@ -61,5 +67,5 @@ attr_accessor :file,:ordered_items
 end
 
 file1 = File.dirname(__dir__) + '/pepsi_burger.csv'
-ir = InputReader.new(file1,["Pepsi","Burger"])
+ir = InputReader.new(file1,["pepsi","BURGER"])
 

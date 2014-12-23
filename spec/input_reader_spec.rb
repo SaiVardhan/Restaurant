@@ -5,7 +5,8 @@ require_relative '../lib/input_reader'
 describe "InputReader" do
 	before(:each) do
 		@file = File.expand_path(File.dirname(File.dirname(__FILE__)) + '/pepsi_burger.csv')
-		@ir = InputReader.new(@file)
+		@ordered_items = ["Pepsi","Burger"]
+		@ir = InputReader.new(@file,@ordered_items)
 	end
 	
 	   describe "#file_exist?" do
@@ -26,10 +27,17 @@ describe "InputReader" do
 		    	@res_data = @ir.parse_csv_data(@file)
 		    end
 			describe "#prase_csv_data(file)" do 
-				 it "returns hash with when the file is supplied" do
+				 it "returns hash when the file is supplied" do
 				 	expect(@res_data).to be_an_instance_of(Hash)
 				 end			
 			end	
+			
+			describe "#find_match_data(restaurant_data,ordered_items)" do
+			 	 it "returns the restaurants id array if ordered items are found" do
+			 	    puts "res data",@res_data
+			 	 	expect(@ir.find_match_data(@res_data,@ordered_items)).to eql(["1","2"])
+			 	end
+			end
     	end
     	
     	
